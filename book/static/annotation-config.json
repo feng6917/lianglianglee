@@ -1,0 +1,14 @@
+{
+  "position": "top-right",
+  "theme": "dark",
+  "hoverExpand": true,
+  "pinExpanded": false,
+  "top": 72,
+  "right": 16,
+  "highlightColors": ["#FFD60A", "#30D158", "#FF9F0A", "#64D2FF", "#BF5AF2", "#FF6B8B"],
+  "drawColors": ["#FF453A", "#0A84FF", "#30D158", "#FF9F0A", "#BF5AF2"],
+  "defaultHighlightColor": "#FFD60A",
+  "defaultDrawColor": "#FF453A",
+  "highlightOpacity": 0.38,
+  "selectionPopup": false
+}

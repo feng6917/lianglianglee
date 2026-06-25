@@ -1,0 +1,522 @@
+/* ========== 右上角标注 Dock（暗色 / 悬停展开） ========== */
+.ll-annotate-dock {
+    position: fixed;
+    top: var(--ll-dock-top, 72px);
+    right: var(--ll-dock-right, 16px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row-reverse;
+    gap: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    user-select: none;
+}
+
+.ll-annotate-dock-trigger {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 22px;
+    background: rgba(44, 44, 46, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
+    opacity: 0.5;
+    transition: opacity 0.28s ease, transform 0.28s ease, background 0.28s ease;
+    flex-shrink: 0;
+}
+
+.ll-annotate-dock-trigger svg {
+    width: 22px;
+    height: 22px;
+}
+
+.ll-annotate-dock:hover .ll-annotate-dock-trigger,
+.ll-annotate-dock.expanded .ll-annotate-dock-trigger,
+.ll-annotate-dock.pinned .ll-annotate-dock-trigger,
+.ll-annotate-dock.has-selection .ll-annotate-dock-trigger {
+    opacity: 1;
+    background: rgba(58, 58, 60, 0.92);
+}
+
+.ll-annotate-dock.has-selection .ll-annotate-dock-trigger {
+    box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.45), 0 4px 24px rgba(0, 0, 0, 0.28);
+}
+
+.ll-annotate-dock-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    min-width: 0;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: 16px;
+    background: rgba(44, 44, 46, 0.78);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    transform: translateX(12px) scale(0.96);
+    transition: max-width 0.32s ease, opacity 0.28s ease, transform 0.28s ease, padding 0.28s ease;
+}
+
+.ll-annotate-dock:hover .ll-annotate-dock-panel,
+.ll-annotate-dock.expanded .ll-annotate-dock-panel,
+.ll-annotate-dock.pinned .ll-annotate-dock-panel {
+    max-width: 320px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) scale(1);
+}
+
+.ll-annotate-dock-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.ll-annotate-dock-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1.2;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.ll-annotate-dock-btn svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.95;
+}
+
+.ll-annotate-dock-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.ll-annotate-dock-btn:active {
+    transform: scale(0.96);
+}
+
+.ll-annotate-dock-btn.active {
+    background: rgba(10, 132, 255, 0.55);
+    color: #fff;
+}
+
+.ll-annotate-dock-colors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ll-annotate-dock-colors .ll-annotate-color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ll-annotate-color-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+    min-width: 28px;
+}
+
+.ll-annotate-colors {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ll-annotate-color-group.inactive {
+    opacity: 0.35;
+}
+
+.ll-annotate-color {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.ll-annotate-color:hover {
+    transform: scale(1.1);
+}
+
+.ll-annotate-color.active {
+    border-color: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.ll-annotate-dock-footer {
+    display: flex;
+    gap: 6px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ll-annotate-dock-footer button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.ll-annotate-dock-footer button:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+}
+
+.ll-annotate-dock-footer button svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ========== iOS 选区菜单 ========== */
+.ll-annotate-popup {
+    position: fixed;
+    z-index: 1001;
+    filter: drop-shadow(0 8px 28px rgba(0, 0, 0, 0.32));
+    animation: ll-popup-in 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
+    user-select: none;
+}
+
+@keyframes ll-popup-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.ll-annotate-popup-inner {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 8px;
+    border-radius: 14px;
+    background: #3a3a3c;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.ll-annotate-popup-colors {
+    display: flex;
+    gap: 6px;
+    padding: 2px 6px;
+}
+
+.ll-annotate-popup-colors .ll-annotate-color {
+    width: 26px;
+    height: 26px;
+}
+
+.ll-annotate-popup-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+.ll-annotate-popup-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background 0.18s ease;
+    min-width: 52px;
+}
+
+.ll-annotate-popup-action svg {
+    width: 22px;
+    height: 22px;
+}
+
+.ll-annotate-popup-action:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ll-annotate-popup-action:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.96);
+}
+
+.ll-annotate-popup-caret {
+    width: 14px;
+    height: 7px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.ll-annotate-popup-caret::after {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: -8px auto 0;
+    background: #3a3a3c;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transform: rotate(45deg);
+}
+
+.ll-annotate-popup.caret-below .ll-annotate-popup-caret {
+    order: -1;
+    transform: rotate(180deg);
+    margin-bottom: -1px;
+}
+
+/* ========== iOS 高亮 ========== */
+mark.ll-highlight {
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 1px;
+    line-height: inherit;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition: background-color 0.2s ease;
+}
+
+mark.ll-highlight.has-note {
+    box-shadow: inset 0 -3px 0 rgba(10, 132, 255, 0.75);
+}
+
+/* ========== iOS 批注面板 ========== */
+.ll-annotate-note-panel {
+    position: fixed;
+    z-index: 1002;
+    width: 320px;
+    padding: 14px;
+    border-radius: 16px;
+    background: rgba(58, 58, 60, 0.92);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.38);
+    animation: ll-popup-in 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
+    user-select: none;
+}
+
+.ll-annotate-note-panel .note-color-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.ll-annotate-note-panel .ll-annotate-color-label {
+    font-size: 12px;
+}
+
+.ll-annotate-note-panel textarea {
+    width: 100%;
+    height: 100px;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    resize: vertical;
+    box-sizing: border-box;
+    user-select: text;
+    background: rgba(0, 0, 0, 0.25);
+    color: rgba(255, 255, 255, 0.92);
+    outline: none;
+    font-family: inherit;
+}
+
+.ll-annotate-note-panel textarea::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.ll-annotate-note-panel .note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.ll-annotate-note-panel .note-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
+
+.ll-annotate-note-panel .note-actions button:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.ll-annotate-note-panel .note-actions button.primary {
+    background: #0a84ff;
+    color: #fff;
+}
+
+.ll-annotate-note-panel .note-actions button.primary:hover {
+    background: #409cff;
+}
+
+/* ========== 设置面板 ========== */
+.ll-annotate-settings {
+    position: fixed;
+    z-index: 1003;
+    width: 280px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(44, 44, 46, 0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+}
+
+.ll-annotate-settings h4 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ll-annotate-settings label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+.ll-annotate-settings input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0a84ff;
+}
+
+.ll-annotate-settings .settings-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.ll-annotate-settings .settings-actions button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.ll-annotate-settings .settings-actions button.primary {
+    background: #0a84ff;
+}
+
+/* ========== Canvas ========== */
+.ll-annotate-canvas-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.ll-annotate-canvas-wrap.drawing {
+    pointer-events: auto;
+    cursor: crosshair;
+}
+
+.ll-annotate-canvas-wrap canvas {
+    display: block;
+}
+
+.book-content {
+    position: relative;
+}
+
+/* ========== Toast ========== */
+.ll-annotate-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    padding: 12px 20px;
+    background: rgba(58, 58, 60, 0.95);
+    color: #ff6961;
+    border-radius: 12px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* 浅色主题 */
+.ll-annotate-dock.theme-light .ll-annotate-dock-trigger {
+    background: rgba(255, 255, 255, 0.82);
+    color: rgba(0, 0, 0, 0.75);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.ll-annotate-dock.theme-light .ll-annotate-dock-panel {
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.ll-annotate-dock.theme-light .ll-annotate-dock-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.ll-annotate-dock.theme-light .ll-annotate-color-label {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.ll-annotate-dock.theme-light .ll-annotate-dock-footer button {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.ll-annotate-dock.theme-light .ll-annotate-color.active {
+    border-color: rgba(0, 0, 0, 0.7);
+}
