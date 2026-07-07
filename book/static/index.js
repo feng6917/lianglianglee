@@ -103,9 +103,9 @@ function hide_canvas() {
     if (!document.getElementById('title')) return
     var link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = '/static/annotation.css'
+    link.href = '/static/annotation.css?v=2'
     document.head.appendChild(link)
     var script = document.createElement('script')
-    script.src = '/static/annotation.js'
+    script.src = '/static/annotation.js?v=2'
     document.body.appendChild(script)
 })()

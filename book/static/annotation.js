@@ -240,6 +240,7 @@
         dockEl = document.createElement('div');
         dockEl.className = 'll-annotate-dock theme-dark';
         dockEl.innerHTML =
+            '<button class="ll-annotate-dock-trigger" title="标注工具" aria-label="标注">' + ICON.dock + '</button>' +
             '<div class="ll-annotate-dock-panel">' +
             '<div class="ll-annotate-dock-actions">' +
             '<button class="ll-annotate-dock-btn" data-action="highlight" title="高亮">' + ICON.highlight + '<span>高亮</span></button>' +
@@ -260,8 +261,7 @@
             '<button data-action="settings" title="设置">' + ICON.settings.replace('width="1.8"', 'width="1.5"') + '</button>' +
             '<button data-action="clear" class="danger" title="清除本页">清除</button>' +
             '</div>' +
-            '</div>' +
-            '<button class="ll-annotate-dock-trigger" title="标注工具" aria-label="标注">' + ICON.dock + '</button>';
+            '</div>';
 
         toolbar = dockEl;
         document.body.appendChild(dockEl);
@@ -279,7 +279,50 @@
             dockEl.classList.toggle('expanded');
         });
 
+        bindDockHover();
+
         updateColorGroupVisibility();
+    }
+
+    function bindDockHover() {
+        var closeTimer = null;
+        var trigger = dockEl.querySelector('.ll-annotate-dock-trigger');
+        var panel = dockEl.querySelector('.ll-annotate-dock-panel');
+
+        function isDockTarget(node) {
+            return node && dockEl.contains(node);
+        }
+
+        function shouldStayOpen() {
+            return config.pinExpanded || dockEl.classList.contains('expanded');
+        }
+
+        function openDock() {
+            clearTimeout(closeTimer);
+            dockEl.classList.add('is-open');
+        }
+
+        function scheduleClose() {
+            clearTimeout(closeTimer);
+            closeTimer = setTimeout(function () {
+                if (!shouldStayOpen()) {
+                    dockEl.classList.remove('is-open');
+                }
+            }, 160);
+        }
+
+        trigger.addEventListener('mouseenter', openDock);
+        panel.addEventListener('mouseenter', openDock);
+
+        trigger.addEventListener('mouseleave', function (e) {
+            if (isDockTarget(e.relatedTarget)) return;
+            scheduleClose();
+        });
+
+        panel.addEventListener('mouseleave', function (e) {
+            if (isDockTarget(e.relatedTarget)) return;
+            scheduleClose();
+        });
     }
 
     function updateColorGroupVisibility() {
@@ -895,7 +938,7 @@
 
         document.addEventListener('click', function (e) {
             if (dockEl && !config.pinExpanded && !dockEl.contains(e.target)) {
-                dockEl.classList.remove('expanded');
+                dockEl.classList.remove('expanded', 'is-open');
             }
         });
     }
